@@ -11,6 +11,5 @@ namespace BulkyBook.DataAccess.Repository.IRepository
     {
         // Since we have skipped the below methods in the generic repository, we can add these methods here
         void Update(Category obj);
-        void Save();
     }
 }
