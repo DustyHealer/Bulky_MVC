@@ -28,11 +28,12 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Category obj)
         {
-            if (obj.Name == obj.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("Name", "The display order cannot exactly match the Name.");
-            }
+            //if (obj.Name == obj.DisplayOrder.ToString())
+            //{
+            //    ModelState.AddModelError("Name", "The display order cannot exactly match the Name.");
+            //}
 
+            // Custom Validation
             if (obj.Name == "test")
             {
                 ModelState.AddModelError("Name", "Test is an invalid value.");
