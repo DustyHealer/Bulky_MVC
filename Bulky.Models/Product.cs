@@ -44,5 +44,6 @@ namespace BulkyBook.Models
         // Navigation Property
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }
