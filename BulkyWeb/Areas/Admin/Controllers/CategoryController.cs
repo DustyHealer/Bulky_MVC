@@ -3,8 +3,9 @@ using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BulkyBookWeb.Controllers
+namespace BulkyBookWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")] // This attribute tells the controller which area it is currently in
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -104,7 +105,7 @@ namespace BulkyBookWeb.Controllers
 
             _unitOfWork.Category.Remove(categoryFromDb);
             _unitOfWork.Save();
-                TempData["Success"] = "Category deleted successfully";
+            TempData["Success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
     }
