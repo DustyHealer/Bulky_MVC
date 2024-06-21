@@ -20,7 +20,9 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             return View(objProductList);
         }
 
-        public IActionResult Create()
+        // We are combining the create and update controller and page to a single one
+        // If Create/{id}, if id==null, then create. Otherwise update
+        public IActionResult Upsert(int? id)
         {
             IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
             {
@@ -37,10 +39,24 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 Product = new Product(),
                 CategoryList = CategoryList
             };
-            return View(productVM);
+
+            if (id == null || id == 0)
+            {
+                // For Create
+                return View(productVM);
+            }
+            else 
+            {
+                // For Update
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                return View(productVM);
+            }
         }
+
+        // We are combining the create and update controller and page to a single one
+        // If Create/{id}, if id==null, then create. Otherwise update
         [HttpPost]
-        public IActionResult Create(ProductVM obj)
+        public IActionResult Upsert(ProductVM obj, IFormFile? file) // Upsert = Update + Insert
         {
             if (ModelState.IsValid)
             {
@@ -61,37 +77,37 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
-            if (productFromDb == null)
-            {
-                return NotFound();
-            }
-            return View(productFromDb);
-        }
+        //public IActionResult Edit(int? id)
+        //{
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
+        //    if (productFromDb == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(productFromDb);
+        //}
 
-        [HttpPost]
-        public IActionResult Edit(Product obj)
-        {
-            Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == obj.Id);
-            if (productFromDb == null)
-            {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Product.Update(obj);
-                _unitOfWork.Save();
-                TempData["Success"] = "Product edited successfully";
-                return RedirectToAction("Index");
-            }
-            return View(obj);
-        }
+        //[HttpPost]
+        //public IActionResult Edit(Product obj)
+        //{
+        //    Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == obj.Id);
+        //    if (productFromDb == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    if (ModelState.IsValid)
+        //    {
+        //        _unitOfWork.Product.Update(obj);
+        //        _unitOfWork.Save();
+        //        TempData["Success"] = "Product edited successfully";
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(obj);
+        //}
 
         public IActionResult Delete(int? id)
         {
