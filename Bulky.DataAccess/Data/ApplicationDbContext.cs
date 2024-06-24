@@ -1,9 +1,11 @@
 ﻿using BulkyBook.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BulkyBook.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    // Identity DbContext is used when we want to implement Microsoft Identity Features
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -15,6 +17,8 @@ namespace BulkyBook.DataAccess.Data
         // Adding seed or initial data into the categories table
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder); // This line is required for identity to work
+
             modelBuilder.Entity<Category>().HasData(
                     new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
                     new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
